@@ -1,0 +1,60 @@
+Algumas pessoas relataram estar tendo problemas com a biblioteca Responsive Voice.
+
+O erro ocorre assim: ao tentar abrir a página no navegador, não é possível ouvir ninguém narrando o texto. Ao inspecionar a página, aparece o seguinte erro:
+
+Alt text: Captura de tela da ferramenta Devtools/Inspecionar do navegador. No menu superior, a opção “Console” está selecionada, e logo abaixo são exibidos os erros, sinalizados em vermelho. O primeiro erro tem a descrição “ResponsiveVoice missing API key”, e o segundo “Selected voice does not exist: Brazilian Portuguese Female.”
+
+Para resolver esse erro, podemos usar uma outra alternativa de biblioteca, chamada Web Speech API, que tem o mesmo objetivo da ResponsiveVoice.
+
+Para utilizá-la, não precisaremos importar nenhum arquivo no HTML, basta usar o código diretamente no arquivo JS. Isso porque essa é uma biblioteca nativa de vários navegadores, como Google Chrome e Microsoft Edge.
+
+Assim, no arquivo app.js, iremos remover o código da linha 9 (responsiveVoice.speak(texto, 'Brazilian Portuguese Female', {rate:1.2});) e adicionar o seguinte código no lugar dele:
+
+ if ('speechSynthesis' in window) {
+        let utterance = new SpeechSynthesisUtterance(texto);
+        utterance.lang = 'pt-BR'; 
+        utterance.rate = 1.2; 
+        window.speechSynthesis.speak(utterance); 
+    } else {
+        console.log("Web Speech API não suportada neste navegador.");
+    }
+Copiar código
+Não se preocupe muito com o que o código faz em cada linha. O que precisamos saber aqui é que estamos criando um código que também será um leitor de tela, em “pt-BR”, definindo a taxa de fala para 1.2.
+
+Dessa forma, o método exibirTextoNaTela, depois das alterações, tem o seguinte código:
+
+function exibirTextoNaTela(tag, texto) {
+    let campo = document.querySelector(tag);
+    campo.innerHTML = texto;
+    if ('speechSynthesis' in window) {
+        let utterance = new SpeechSynthesisUtterance(texto);
+        utterance.lang = 'pt-BR'; 
+        utterance.rate = 1.2; 
+        window.speechSynthesis.speak(utterance); 
+    } else {
+        console.log("Web Speech API não suportada neste navegador.");
+    }
+}
+Copiar código
+Salve o arquivo e reinicie o navegador, vendo a nova biblioteca funcionando :)
+
+Por padrão, você irá ouvir uma voz masculina narrando o texto.
+
+Com isso, no arquivo index.html poderemos apagar a linha que usava a biblioteca Responsive Voice, uma vez que ela não está mais sendo usada. Essa é a linha 7 ( <script src="https://code.responsivevoice.org/responsivevoice.js"></script>.
+
+A tag head, depois de atualizada, fica assim:
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700&family=Inter:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>JS Game</title>
+</head>
+Copiar código
+Assim, finalizamos as modificações relacionadas à nova biblioteca do projeto!
+
+ Discutir no
